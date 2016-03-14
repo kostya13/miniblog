@@ -6,8 +6,10 @@ import templates
 import config
 import datetime
 
+
 def is_logined():
     return request.get_cookie("logined", secret='some-secret-key')
+
 
 def read_messages(): 
     def _stripped(e):
@@ -20,6 +22,7 @@ def read_messages():
             if date == '':
                 break
             entry['date'] = date
+            entry['date_fmt'] = "{0}/{1}/{2} {3}:{4}".format(date[0:4], date[4:6], date[6:8], date[8:10], date[10:12])
             entry['title'] = _stripped(d)
             entry['categories'] = _stripped(d).split(',')
             entry['text'] = _stripped(d)
@@ -28,6 +31,7 @@ def read_messages():
             else:
                 raise Exception()
     return all_entries
+
 
 def write_record(file, date, title, category, text):
     def _writeln(file, line):
@@ -38,23 +42,6 @@ def write_record(file, date, title, category, text):
     _writeln(file, text)
     _writeln(file, config.separator)
 
-@route('/')
-def index():
-    messages = read_messages()
-    return template(templates.main_form, logined = is_logined(), messages=reversed(messages))
-
-@route('/nb')
-def notebook():
-    with open("notebook.txt") as n:
-        message = n.read()
-    return template(templates.notebook, message=message) 
-
-@route('/nb', method='POST')
-def save_notebook():
-    message = request.forms.get('message')    
-    with open("notebook.txt", "w") as n:
-        n.write(message)
-    return template(templates.notebook, message=message) 
 
 def edit_message(date, title, text, category):
     messages = read_messages()
@@ -66,12 +53,34 @@ def edit_message(date, title, text, category):
                 write_record(d, message['date'], message['title'], message['categories'], message['text'])
     return
 
+
 def new_message(title, text, category):
     date = datetime.datetime.today()
-    date_fmt = date.strftime("%Y%m%d_%H%M%S")
+    date_fmt = date.strftime("%Y%m%d%H%M%S")
     with open("database.txt", "a") as d:
         write_record(d, date_fmt, title, category, text)
     return
+
+
+@route('/')
+def index():
+    return template(templates.main_form, logined = is_logined(), categories=config.categories, messages=reversed(read_messages()))
+
+
+@route('/nb')
+def notebook():
+    with open("notebook.txt") as n:
+        message = n.read()
+    return template(templates.notebook, message=message) 
+
+
+@route('/nb', method='POST')
+def save_notebook():
+    message = request.forms.get('message')    
+    with open("notebook.txt", "w") as n:
+        n.write(message)
+    return template(templates.notebook, message=message) 
+
 
 @route('/save', method='POST')
 def save():
@@ -85,6 +94,7 @@ def save():
         new_message( title, message, category)
     redirect("/")
 
+
 @route('/add')
 def add ():
     if is_logined():
@@ -92,6 +102,7 @@ def add ():
         return template(templates.edit_entry, title="", categories=categories, text="", date="")
     else:
         return template(templates.login_form,referer="/add")
+
 
 @route('/edit/<entry_id>')
 def edit (entry_id):
@@ -106,9 +117,11 @@ def edit (entry_id):
     else:
         return template(templates.login_form,referer="/edit/{0}".format(entry_id))
 
+
 @route('/login')
 def login():
     return template(templates.login_form,referer=request.headers.get('Referer'))
+
 
 @route('/login', method='POST')
 def do_login():
@@ -120,10 +133,12 @@ def do_login():
     else:
         return templates.not_autorized
 
+
 def check_login(password):
     return True
 
-#if __name__ == "__main__":
+
+if __name__ == "__main__":
     #run(server='cgi')
-bottle.debug(True)
-run(reloader=True, port=8081)
+    bottle.debug(True)
+    run(reloader=True, port=8081)
