@@ -1,12 +1,13 @@
 # -*- coding: UTF-8 -*-
 
 main_form = '''
-<h1>Я оставлю это здесь</h2>
+<h1>Я оставлю это здесь...</h1>
 <a href="/nb">Записная книжка</a>
 <span style="margin-left:20px">
 <a href="/add">Добавить запись</a>
 %if not logined:
-    <a href="/login">login</a>
+    <span style="margin-left:50px">
+    <a href="/login">Логин</a>
 %end
 <hr>
 <br>
@@ -50,7 +51,9 @@ categories = '''
 
 '''
 
-not_autorized = '''Пройдите авторизацию <a href="/login">login</a>'''
+not_autorized = '''Пройдите авторизацию снова <a href="/login">login</a><br><br>
+        <a href="/">Главная</a>
+'''
 
 edit_entry = '''
         <a href="/">Главная</a><br><br>

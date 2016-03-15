@@ -10,6 +10,13 @@ import datetime
 def is_logined():
     return request.get_cookie("logined", secret='some-secret-key')
 
+def check_login(f):
+    def decorated(*args, **kwargs):
+        if is_logined():
+            return f(*args, **kwargs)
+        else:
+            redirect("/login")
+    return decorated
 
 def read_messages(): 
     def _stripped(e):
@@ -104,6 +111,7 @@ def save_notebook():
 
 
 @route('/save', method='POST')
+@check_login
 def save():
     date = request.forms.get('date')
     title = request.forms.get('title')
@@ -125,14 +133,13 @@ def add ():
         return template(templates.login_form,referer="/add")
 
 @route('/delete/<entry_id>')
+@check_login
 def delete_request (entry_id):
-    if is_logined():
-        return template(templates.delete_entry, date=entry_id)
-    else:
-        redirect("/")
+    return template(templates.delete_entry, date=entry_id)
 
 
 @route('/delete', method='POST')
+@check_login
 def delete():
     delete_entry(request.forms.get('date'))
     redirect("/")
@@ -152,11 +159,9 @@ def edit (entry_id):
 
 
 @route('/cat/<cat_id>')
+@check_login
 def category (cat_id):
-    if is_logined():
-        return template(templates.categories, category = cat_id, messages=reversed(find_by_category(cat_id)))
-    else:
-        redirect("/")
+    return template(templates.categories, category = cat_id, messages=reversed(find_by_category(cat_id)))
 
 
 @route('/login')
@@ -167,7 +172,7 @@ def login():
 @route('/login', method='POST')
 def do_login():
     password = request.forms.get('password')
-    if check_login(password):
+    if validate(password):
         response.set_cookie("logined", True, secret='some-secret-key')
         referer = request.forms.get('referer')
         redirect(referer)
@@ -175,8 +180,8 @@ def do_login():
         return templates.not_autorized
 
 
-def check_login(password):
-    return True
+def validate(password):
+    return password == config.password
 
 
 if __name__ == "__main__":

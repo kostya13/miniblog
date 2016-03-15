@@ -1,4 +1,4 @@
 ﻿# -*- coding: UTF-8 -*-
-password = "password"
+password = "123"
 categories = ["Linux", "Железо", "Полезное", "Программирование", "Ссылки", "Юмор"]
 separator = "@@@@@%%%^^(((&&&)))^^%%%@@@@@"
