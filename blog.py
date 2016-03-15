@@ -10,6 +10,7 @@ import datetime
 def is_logined():
     return request.get_cookie("logined", secret='some-secret-key')
 
+
 def check_login(f):
     def decorated(*args, **kwargs):
         if is_logined():
@@ -17,6 +18,7 @@ def check_login(f):
         else:
             redirect("/login")
     return decorated
+
 
 def read_messages(): 
     def _stripped(e):
@@ -26,7 +28,6 @@ def read_messages():
         while(True):
             entry = {}
             date = _stripped(d)
-            print date
             if date == '':
                 break
             entry['date'] = date
@@ -41,7 +42,7 @@ def read_messages():
                     break
                 entry['text'] += text.rstrip()
     return all_entries
-#.replace('\n', '<br>')
+
 
 def write_record(file, date, title, category, text):
     def _writeln(file, line):
@@ -144,7 +145,7 @@ def save():
         edit_entry(date, title, message, category)
     else:
         new_entry( title, message, category)
-    redirect("/")
+    redirect("/#" + date)
 
 
 @route('/add')
@@ -206,8 +207,7 @@ def do_login():
 def validate(password):
     return password == config.password
 
-
+#run(server='cgi')
 if __name__ == "__main__":
-    #run(server='cgi')
     bottle.debug(True)
     run(reloader=True, port=8081)

@@ -17,18 +17,20 @@ main_form = '''
 <hr>
 <hr>
 % for mes in messages:
-<table>
-  <tr><td style="font-weight: bold">{{mes["title"]}}</td></tr>
+<table width=800>
+  <tr><td><h3 id="{{mes["date"]}}">{{mes["title"]}}</h3></td></tr>
   <tr><td>Дата: {{mes["date_fmt"]}}
   <a style="margin-left:50px;" href='/edit/{{mes["date"]}}'>Редактировать</a><span ><a style="margin-left:100px;font-size:small" href='/delete/{{mes["date"]}}'>Удалить</a></td></tr>
   <tr><td>
   % for cat in mes["categories"]:
   <a href='/cat/{{cat}}'>{{cat}}</a>
   %end
+  <div style="margin-top:20px">
   </td></tr>
   <tr><td>{{!mes["text"]}}</td></tr>
+  <tr><td><hr></td></tr>
 </table>
-<hr>
+
 %end
 '''
 
