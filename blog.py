@@ -43,7 +43,14 @@ def write_record(file, date, title, category, text):
     _writeln(file, config.separator)
 
 
-def edit_message(date, title, text, category):
+def find_entry(entry_id):
+    messages = [m for m in read_messages() if m['date'] == entry_id]
+    if messages:
+        return messages[0]
+    else:
+        return None
+
+def edit_entry(date, title, text, category):
     messages = read_messages()
     with open("database.txt", "w") as d:
         for message in messages:
@@ -54,7 +61,16 @@ def edit_message(date, title, text, category):
     return
 
 
-def new_message(title, text, category):
+def  delete_entry(date):
+    messages = read_messages()
+    with open("database.txt", "w") as d:
+        for message in messages:
+            if message['date'] != date:
+                write_record(d, message['date'], message['title'], message['categories'], message['text'])
+    return
+
+
+def new_entry(title, text, category):
     date = datetime.datetime.today()
     date_fmt = date.strftime("%Y%m%d%H%M%S")
     with open("database.txt", "a") as d:
@@ -89,9 +105,9 @@ def save():
     message = request.forms.get('text')
     category = request.forms.getlist('category')
     if date:
-        edit_message(date, title, message, category)
+        edit_entry(date, title, message, category)
     else:
-        new_message( title, message, category)
+        new_entry( title, message, category)
     redirect("/")
 
 
@@ -103,15 +119,27 @@ def add ():
     else:
         return template(templates.login_form,referer="/add")
 
+@route('/delete/<entry_id>')
+def delete_request (entry_id):
+    if is_logined():
+        return template(templates.delete_entry, date=entry_id)
+    else:
+        redirect("/")
+
+
+@route('/delete', method='POST')
+def delete():
+    delete_entry(request.forms.get('date'))
+    redirect("/")
+
 
 @route('/edit/<entry_id>')
 def edit (entry_id):
     if is_logined():
-        messages =[m for m in read_messages() if m['date'] == entry_id]
-        if messages: 
-            message = messages[0]
-            categories = [(c, c in m['categories']) for c in config.categories]
-            return template(templates.edit_entry,title=message["title"],categories=categories, text=message["text"], date=message["date"])
+        entry = find_entry(entry_id)
+        if entry: 
+            categories = [(c, c in entry['categories']) for c in config.categories]
+            return template(templates.edit_entry,title=entry["title"],categories=categories, text=entry["text"], date=entry["date"])
         else:
             redirect("/")
     else:

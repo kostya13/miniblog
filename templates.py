@@ -18,7 +18,7 @@ main_form = '''
 <table>
   <tr><td style="font-weight: bold">{{mes["title"]}}</td></tr>
   <tr><td>Дата: {{mes["date_fmt"]}}
-  <a style="margin-left:50px;" href='/edit/{{mes["date"]}}'>Редактировать</a><span ><a style="margin-left:100px;font-size:small" href='/del/{{mes["date"]}}'>Удалить</a></td></tr>
+  <a style="margin-left:50px;" href='/edit/{{mes["date"]}}'>Редактировать</a><span ><a style="margin-left:100px;font-size:small" href='/delete/{{mes["date"]}}'>Удалить</a></td></tr>
 
   <tr><td>
   % for cat in mes["categories"]:
@@ -53,6 +53,15 @@ edit_entry = '''
         </form>
 '''
 
+delete_entry = '''
+        <a href="/">Главная</a><br><br>
+        <form action="/delete" method="post">
+          Подтверждение удаления сообщения {{date}}<br>
+          <input name="date" value="{{date}}" type="hidden" />
+          <input value="Удалить" type="submit" />
+         </form>
+    '''
+
 login_form = '''
         <form action="/login" method="post">
             Password: <input name="password" type="password" />
@@ -68,3 +77,5 @@ notebook = '''
           <textarea name="message" cols="100" rows="30">{{message}}</textarea>
          </form>
     '''
+
+
