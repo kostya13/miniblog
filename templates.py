@@ -19,7 +19,6 @@ main_form = '''
   <tr><td style="font-weight: bold">{{mes["title"]}}</td></tr>
   <tr><td>Дата: {{mes["date_fmt"]}}
   <a style="margin-left:50px;" href='/edit/{{mes["date"]}}'>Редактировать</a><span ><a style="margin-left:100px;font-size:small" href='/delete/{{mes["date"]}}'>Удалить</a></td></tr>
-
   <tr><td>
   % for cat in mes["categories"]:
   <a href='/cat/{{cat}}'>{{cat}}</a>
@@ -29,6 +28,26 @@ main_form = '''
 </table>
 <hr>
 %end
+'''
+
+categories = '''
+<h3>Категория {{category}}</h3>
+<a href="/">Главная</a><br><br>
+<hr>
+% for mes in messages:
+<table>
+  <tr><td style="font-weight: bold">{{mes["title"]}}</td></tr>
+  <tr><td>Дата: {{mes["date_fmt"]}}</td></tr>
+  <tr><td>
+  % for cat in mes["categories"]:
+  <a href='/cat/{{cat}}'>{{cat}}</a>
+  %end
+  </td></tr>
+  <tr><td>{{mes["text"]}}</td></tr>
+</table>
+<hr>
+%end
+
 '''
 
 not_autorized = '''Пройдите авторизацию <a href="/login">login</a>'''

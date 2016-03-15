@@ -50,6 +50,11 @@ def find_entry(entry_id):
     else:
         return None
 
+def find_by_category(cat_id):
+    messages = [m for m in read_messages() if cat_id in m['categories']]
+    return messages
+
+
 def edit_entry(date, title, text, category):
     messages = read_messages()
     with open("database.txt", "w") as d:
@@ -61,7 +66,7 @@ def edit_entry(date, title, text, category):
     return
 
 
-def  delete_entry(date):
+def delete_entry(date):
     messages = read_messages()
     with open("database.txt", "w") as d:
         for message in messages:
@@ -144,6 +149,14 @@ def edit (entry_id):
             redirect("/")
     else:
         return template(templates.login_form,referer="/edit/{0}".format(entry_id))
+
+
+@route('/cat/<cat_id>')
+def category (cat_id):
+    if is_logined():
+        return template(templates.categories, category = cat_id, messages=reversed(find_by_category(cat_id)))
+    else:
+        redirect("/")
 
 
 @route('/login')
