@@ -26,19 +26,22 @@ def read_messages():
         while(True):
             entry = {}
             date = _stripped(d)
+            print date
             if date == '':
                 break
             entry['date'] = date
             entry['date_fmt'] = "{0}/{1}/{2} {3}:{4}".format(date[0:4], date[4:6], date[6:8], date[8:10], date[10:12])
             entry['title'] = _stripped(d)
             entry['categories'] = _stripped(d).split(',')
-            entry['text'] = _stripped(d)
-            if _stripped(d)  == config.separator:
-                all_entries.append(entry)
-            else:
-                raise Exception()
+            entry['text'] = ''
+            while(True):
+                text = d.readline()
+                if text.rstrip() == config.separator or text == '':
+                    all_entries.append(entry)
+                    break
+                entry['text'] += text.rstrip()
     return all_entries
-
+#.replace('\n', '<br>')
 
 def write_record(file, date, title, category, text):
     def _writeln(file, line):
@@ -50,16 +53,12 @@ def write_record(file, date, title, category, text):
     _writeln(file, config.separator)
 
 
-def find_entry(entry_id):
-    messages = [m for m in read_messages() if m['date'] == entry_id]
-    if messages:
-        return messages[0]
-    else:
-        return None
-
-def find_by_category(cat_id):
-    messages = [m for m in read_messages() if cat_id in m['categories']]
-    return messages
+def new_entry(title, text, category):
+    date = datetime.datetime.today()
+    date_fmt = date.strftime("%Y%m%d%H%M%S")
+    with open("database.txt", "a") as d:
+        write_record(d, date_fmt, title, category, text)
+    return
 
 
 def edit_entry(date, title, text, category):
@@ -82,12 +81,17 @@ def delete_entry(date):
     return
 
 
-def new_entry(title, text, category):
-    date = datetime.datetime.today()
-    date_fmt = date.strftime("%Y%m%d%H%M%S")
-    with open("database.txt", "a") as d:
-        write_record(d, date_fmt, title, category, text)
-    return
+def find_entry(entry_id):
+    messages = [m for m in read_messages() if m['date'] == entry_id]
+    if messages:
+        return messages[0]
+    else:
+        return None
+
+
+def find_by_category(cat_id):
+    messages = [m for m in read_messages() if cat_id in m['categories']]
+    return messages
 
 
 @route('/')
@@ -110,12 +114,15 @@ def save_notebook():
     return template(templates.notebook, message=message) 
 
 
+def filter_text(text):
+    return text.replace('\r\n', '<br>')
+
 @route('/save', method='POST')
 @check_login
 def save():
     date = request.forms.get('date')
     title = request.forms.get('title')
-    message = request.forms.get('text')
+    message = request.forms.get('text').replace('\r\n', '<br>')
     category = request.forms.getlist('category')
     if date:
         edit_entry(date, title, message, category)
@@ -151,7 +158,7 @@ def edit (entry_id):
         entry = find_entry(entry_id)
         if entry: 
             categories = [(c, c in entry['categories']) for c in config.categories]
-            return template(templates.edit_entry,title=entry["title"],categories=categories, text=entry["text"], date=entry["date"])
+            return template(templates.edit_entry,title=entry["title"],categories=categories, text=entry["text"].replace('<br>', '\n'), date=entry["date"])
         else:
             redirect("/")
     else:

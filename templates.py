@@ -9,11 +9,12 @@ main_form = '''
     <span style="margin-left:50px">
     <a href="/login">Логин</a>
 %end
-<hr>
+<div style="margin-top:5px">
 <br>
   % for cat in categories:
   <a href='/cat/{{cat}}'>{{cat}}</a>&nbsp;&nbsp;&nbsp;
   %end
+<hr>
 <hr>
 % for mes in messages:
 <table>
@@ -25,7 +26,7 @@ main_form = '''
   <a href='/cat/{{cat}}'>{{cat}}</a>
   %end
   </td></tr>
-  <tr><td>{{mes["text"]}}</td></tr>
+  <tr><td>{{!mes["text"]}}</td></tr>
 </table>
 <hr>
 %end
@@ -44,7 +45,7 @@ categories = '''
   <a href='/cat/{{cat}}'>{{cat}}</a>
   %end
   </td></tr>
-  <tr><td>{{mes["text"]}}</td></tr>
+  <tr><td>{{!mes["text"]}}</td></tr>
 </table>
 <hr>
 %end
