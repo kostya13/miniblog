@@ -72,6 +72,8 @@ edit_entry = '''
             <Br>
             <textarea name="text" cols="100" rows="30">{{text}}</textarea>
             <br>
+            &#91;&#91;ссылка&#93;&#93;, &#123;&#123;ссылка на картинку&#125;&#125;
+            <br>
             <input value="Сохранить" type="submit" />
         </form>
 '''

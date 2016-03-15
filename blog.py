@@ -120,9 +120,25 @@ def filter_text(text):
 @route('/save', method='POST')
 @check_login
 def save():
+    def update(text, start_marker, end_marker, formatstring):
+        while(True):
+            start = text.find(start_marker)
+            end = text.find(end_marker)
+            if start >=0 and end > start:
+                text = formatstring.format(text[0:start], text[start+2:end], text[end+2:])
+            else:
+                break
+        return text
+
+    def update_link(text):
+        return update(text, '[[', ']]', "{0} <a href={1}>{1}</a> {2}")
+
+    def update_images(text):
+        return update(text, '{{', '}}', "{0} <img src={1}>{2}")
+  
     date = request.forms.get('date')
     title = request.forms.get('title')
-    message = request.forms.get('text').replace('\r\n', '<br>')
+    message = update_images(update_link(request.forms.get('text').replace('\r\n', '<br>')))
     category = request.forms.getlist('category')
     if date:
         edit_entry(date, title, message, category)
