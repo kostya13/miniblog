@@ -4,7 +4,9 @@ main_form = '''
 <h1 style="font-size:30pt">Я оставлю это здесь...</h1>
 <a href="/nb">Записная книжка</a>
 <span style="margin-left:20px">
+%if logined:
 <a href="/add">Добавить запись</a>
+%end
 %if not logined:
     <span style="margin-left:50px">
     <a href="/login">Логин</a>
@@ -19,7 +21,10 @@ main_form = '''
   <tr><td><hr></td></tr>
   <tr><td><h3 style="margin-bottom:5px;" id="{{mes["date"]}}">{{mes["title"]}}</h3></td></tr>
   <tr><td>Дата: {{mes["date_fmt"]}}
-  <a style="margin-left:50px;" href='/edit/{{mes["date"]}}'>Редактировать</a><span ><a style="margin-left:100px;font-size:small" href='/delete/{{mes["date"]}}'>Удалить</a></td></tr>
+  %if logined:
+  <a style="margin-left:40px;" href='/edit/{{mes["date"]}}'>Редактировать</a><span ><a style="margin-left:100px;font-size:small" href='/delete/{{mes["date"]}}'>[X]</a>
+  %end
+  </td></tr>
   <tr><td>
   % for cat in mes["categories"]:
   <a href='/cat/{{cat}}'>{{cat}}</a>&nbsp;&nbsp;&nbsp;
