@@ -21,22 +21,20 @@ main_form = '''
   <a href='/cat/{{cat}}'>{{cat}}</a>&nbsp;&nbsp;&nbsp;
   %end
 % for mes in messages:
-<table style="font-size:150%" width=800>
-  <tr><td><hr></td></tr>
-  <tr><td><h3 style="margin-bottom:5px;" id="{{mes["date"]}}">{{mes["title"]}}</h3></td></tr>
-  <tr><td>Дата: {{mes["date_fmt"]}}
+<div style="width: 800;margin-top:15;font-size:20pt;border-top:1px solid;">
+  <div><h3 style="margin:0 5 0 5;" id="{{mes["date"]}}">{{mes["title"]}}</h3></div>
+  <div>Дата: {{mes["date_fmt"]}}
   %if logined:
-  <a style="margin-left:40px;" href='/edit/{{mes["date"]}}'>Редактировать</a><a style="margin-left:100px;font-size:small" href='/delete/{{mes["date"]}}'>[X]</a>
+  <a style="margin-left:30px;font-size:15pt" href='/edit/{{mes["date"]}}'>Редактировать</a><a style="margin-left:100px;font-size:small" href='/delete/{{mes["date"]}}'>[X]</a>
   %end
-  </td></tr>
-  <tr><td>
+  </div>
+  <div>
   % for cat in mes["categories"]:
-  <a href='/cat/{{cat}}'>{{cat}}</a>&nbsp;&nbsp;&nbsp;
+  <a style="font-size:15pt" href='/cat/{{cat}}'>{{cat}}</a>&nbsp;&nbsp;&nbsp;
   %end
-  <div style="margin-top:20px">
-  </td></tr>
-  <tr><td>{{!mes["text"]}}</td></tr>
-</table>
+  </div>
+  <div style="margin-top:20px">{{!mes["text"]}}</div>
+</div>
 %end
 '''
 
