@@ -192,6 +192,11 @@ def category (cat_id):
 def login():
     return template(templates.login_form,referer=request.headers.get('Referer'))
 
+@route('/exit')
+def exit():
+    response.set_cookie("logined", False, secret='some-secret-key')
+    redirect("/")
+
 
 @route('/login', method='POST')
 def do_login():

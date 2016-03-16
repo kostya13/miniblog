@@ -11,6 +11,10 @@ main_form = '''
     <span style="margin-left:50px">
     <a href="/login">Логин</a>
 %end
+%if logined:
+<span style="margin-left:50px">
+<a href="/exit">Выход</a>
+%end
 <div style="margin-top:5px">
 <br>
   % for cat in categories:
