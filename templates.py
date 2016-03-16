@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 main_form = '''
-<h1>Я оставлю это здесь...</h1>
+<h1 style="font-size:30pt">Я оставлю это здесь...</h1>
 <a href="/nb">Записная книжка</a>
 <span style="margin-left:20px">
 <a href="/add">Добавить запись</a>
@@ -14,44 +14,41 @@ main_form = '''
   % for cat in categories:
   <a href='/cat/{{cat}}'>{{cat}}</a>&nbsp;&nbsp;&nbsp;
   %end
-<hr>
-<hr>
 % for mes in messages:
-<table width=800>
-  <tr><td><h3 id="{{mes["date"]}}">{{mes["title"]}}</h3></td></tr>
+<table style="font-size:150%" width=800>
+  <tr><td><hr></td></tr>
+  <tr><td><h3 style="margin-bottom:5px;" id="{{mes["date"]}}">{{mes["title"]}}</h3></td></tr>
   <tr><td>Дата: {{mes["date_fmt"]}}
   <a style="margin-left:50px;" href='/edit/{{mes["date"]}}'>Редактировать</a><span ><a style="margin-left:100px;font-size:small" href='/delete/{{mes["date"]}}'>Удалить</a></td></tr>
   <tr><td>
   % for cat in mes["categories"]:
-  <a href='/cat/{{cat}}'>{{cat}}</a>
+  <a href='/cat/{{cat}}'>{{cat}}</a>&nbsp;&nbsp;&nbsp;
   %end
   <div style="margin-top:20px">
   </td></tr>
   <tr><td>{{!mes["text"]}}</td></tr>
-  <tr><td><hr></td></tr>
 </table>
-
 %end
 '''
 
 categories = '''
-<h3>Категория {{category}}</h3>
+<h2>Категория: {{category}}</h2>
 <a href="/">Главная</a><br><br>
-<hr>
 % for mes in messages:
-<table>
-  <tr><td style="font-weight: bold">{{mes["title"]}}</td></tr>
-  <tr><td>Дата: {{mes["date_fmt"]}}</td></tr>
+<table style="font-size:150%" width=800>
+  <tr><td><hr></td></tr>
+  <tr><td><h3 style="margin-bottom:5px;" id="{{mes["date"]}}">{{mes["title"]}}</h3></td></tr>
+  <tr><td>Дата: {{mes["date_fmt"]}}
+  <a style="margin-left:50px;" href='/edit/{{mes["date"]}}'>Редактировать</a><span ><a style="margin-left:100px;font-size:small" href='/delete/{{mes["date"]}}'>Удалить</a></td></tr>
   <tr><td>
   % for cat in mes["categories"]:
-  <a href='/cat/{{cat}}'>{{cat}}</a>
+  <a href='/cat/{{cat}}'>{{cat}}</a>&nbsp;&nbsp;&nbsp;
   %end
+  <div style="margin-top:20px">
   </td></tr>
   <tr><td>{{!mes["text"]}}</td></tr>
 </table>
-<hr>
 %end
-
 '''
 
 not_autorized = '''Пройдите авторизацию снова <a href="/login">login</a><br><br>

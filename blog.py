@@ -132,10 +132,10 @@ def save():
         return text
 
     def update_link(text):
-        return update(text, '[[', ']]', "{0} <a href={1}>{1}</a> {2}")
+        return update(text, '[[', ']]', '{0} <a href={1} target="_blank">{1}</a> {2}')
 
     def update_images(text):
-        return update(text, '{{', '}}', "{0} <img src={1}>{2}")
+        return update(text, '{{', '}}', '{0} <img src={1}>{2}')
   
     date = request.forms.get('date')
     title = request.forms.get('title')
