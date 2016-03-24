@@ -1,6 +1,16 @@
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
+html  = '''<html>
+<head>
+<meta charset="utf-8">
+<title>Я оставлю это здесь...</title>
+</head>
+<body>
+{0}
+</body>
+</html>
+'''
 
-main_form = '''
+main = '''
 <h1 style="font-size:30pt">Я оставлю это здесь...</h1>
 <a style="font-size:20pt" href="/nb">Записная книжка</a>
 <span style="margin-left:20px">
@@ -62,15 +72,15 @@ not_autorized = '''Пройдите авторизацию снова <a href="/
         <a href="/">Главная</a>
 '''
 
-edit_entry = '''
+edit = '''
         <a href="/">Главная</a><br><br>
         <form action="/save" method="post">
-            <input type="text" name="title" value="{{title}}" size="50">   
+            <input type="text" name="title" value="{{title}}" size="50">
             <input name="date" value="{{date}}" type="hidden" />
             <br>
             %for cat in categories:
              <input type="checkbox" name="category" value="{{cat[0]}}"
-             %if cat[1]: 
+             %if cat[1]:
                 checked
              %end
             >{{cat[0]}}
@@ -84,7 +94,7 @@ edit_entry = '''
         </form>
 '''
 
-delete_entry = '''
+delete = '''
         <a href="/">Главная</a><br><br>
         <form action="/delete" method="post">
           Подтверждение удаления сообщения {{date}}<br>
@@ -93,7 +103,7 @@ delete_entry = '''
          </form>
     '''
 
-login_form = '''
+login = '''
         <form action="/login" method="post">
             Password: <input name="password" type="password" />
             <input name="referer" value="{{referer}}" type="hidden" />
@@ -110,3 +120,10 @@ notebook = '''
     '''
 
 
+main_page = html.format(main)
+categories_page = html.format(categories)
+not_autorized_page  = html.format(not_autorized)
+edit_page = html.format(edit)
+delete_page = html.format(delete)
+login_page = html.format(login)
+notebook_page = html.format(notebook)

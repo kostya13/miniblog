@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# -*- coding: UTF-8 -*-
+# -*- coding: utf-8 -*-
 from bottle import route, run, template, request, redirect, response
 import bottle
 import templates
@@ -20,7 +20,7 @@ def check_login(f):
     return decorated
 
 
-def read_messages(): 
+def read_messages():
     def _stripped(e):
         return e.readline().rstrip()
     all_entries = []
@@ -97,22 +97,22 @@ def find_by_category(cat_id):
 
 @route('/')
 def index():
-    return template(templates.main_form, logined = is_logined(), categories=config.categories, messages=reversed(read_messages()))
+    return template(templates.main_page, logined = is_logined(), categories=config.categories, messages=reversed(read_messages()))
 
 
 @route('/nb')
 def notebook():
     with open("notebook.txt") as n:
         message = n.read()
-    return template(templates.notebook, message=message) 
+    return template(templates.notebook_page, message=message)
 
 
 @route('/nb', method='POST')
 def save_notebook():
-    message = request.forms.get('message')    
+    message = request.forms.get('message')
     with open("notebook.txt", "w") as n:
         n.write(message)
-    return template(templates.notebook, message=message) 
+    return template(templates.notebook_page, message=message)
 
 
 def filter_text(text):
@@ -136,7 +136,7 @@ def save():
 
     def update_images(text):
         return update(text, '{{', '}}', '{0} <img src={1}>{2}')
-  
+
     date = request.forms.get('date')
     title = request.forms.get('title')
     message = update_images(update_link(request.forms.get('text').replace('\r\n', '<br>')))
@@ -152,14 +152,14 @@ def save():
 def add ():
     if is_logined():
         categories = [(c, False) for c in config.categories]
-        return template(templates.edit_entry, title="", categories=categories, text="", date="")
+        return template(templates.edit_page, title="", categories=categories, text="", date="")
     else:
-        return template(templates.login_form,referer="/add")
+        return template(templates.login_page,referer="/add")
 
 @route('/delete/<entry_id>')
 @check_login
 def delete_request (entry_id):
-    return template(templates.delete_entry, date=entry_id)
+    return template(templates.delete_page, date=entry_id)
 
 
 @route('/delete', method='POST')
@@ -173,24 +173,24 @@ def delete():
 def edit (entry_id):
     if is_logined():
         entry = find_entry(entry_id)
-        if entry: 
+        if entry:
             categories = [(c, c in entry['categories']) for c in config.categories]
-            return template(templates.edit_entry,title=entry["title"],categories=categories, text=entry["text"].replace('<br>', '\n'), date=entry["date"])
+            return template(templates.edit_page,title=entry["title"],categories=categories, text=entry["text"].replace('<br>', '\n'), date=entry["date"])
         else:
             redirect("/")
     else:
-        return template(templates.login_form,referer="/edit/{0}".format(entry_id))
+        return template(templates.login_page,referer="/edit/{0}".format(entry_id))
 
 
 @route('/cat/<cat_id>')
 @check_login
 def category (cat_id):
-    return template(templates.categories, category = cat_id, messages=reversed(find_by_category(cat_id)))
+    return template(templates.categories_page, category = cat_id, messages=reversed(find_by_category(cat_id)))
 
 
 @route('/login')
 def login():
-    return template(templates.login_form,referer=request.headers.get('Referer'))
+    return template(templates.login_page,referer=request.headers.get('Referer'))
 
 @route('/exit')
 def exit():
@@ -206,7 +206,7 @@ def do_login():
         referer = request.forms.get('referer')
         redirect(referer)
     else:
-        return templates.not_autorized
+        return templates.not_autorized_page
 
 
 def validate(password):
